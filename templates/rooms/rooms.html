@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if message_success %}
+<div class="alert alert-success" role="alert">
+  {{ message_success}}
+</div>
+{% endif %}
+
+{% if message_danger %}
+<div class="alert alert-danger" role="alert">
+  {{ message_danger }}
+</div>
+{% endif %}
+
+<h1>Rooms</h1>
+
+<table class="table">
+  <thead class="table table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Capacity</th>
+      <th scope="col">Projector</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for room in rooms %}
+    <tr>
+      <th scope="row">{{ room.pk }}</th>
+      <td>{{ room.room_name }}</td>
+      <td>{{ room.capacity }}</td>
+      <td>{% if room.projector %}<i class="bi bi-check-circle"></i>{% endif %}</td>
+      <td><button type="button" class="btn btn-primary">Make reservation</button></td>
+      <td><button type="button" class="btn btn-warning">Edit</button></td>
+      <td><button type="button" class="btn btn-danger">Delete</button></td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
