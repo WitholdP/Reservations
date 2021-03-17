@@ -23,6 +23,7 @@
       <th scope="col">Name</th>
       <th scope="col">Capacity</th>
       <th scope="col">Projector</th>
+      <th scope="col">Availability</th>
       <th scope="col"></th>
       <th scope="col"></th>
       <th scope="col"></th>
@@ -35,9 +36,10 @@
       <td>{{ room.room_name }}</td>
       <td>{{ room.capacity }}</td>
       <td>{% if room.projector %}<i class="bi bi-check-circle"></i>{% endif %}</td>
+      <td>Is available</td>
       <td><button type="button" class="btn btn-primary">Make reservation</button></td>
       <td><button type="button" class="btn btn-warning">Edit</button></td>
-      <td><button type="button" class="btn btn-danger">Delete</button></td>
+      <td><a href="{% url 'room_delete' room.id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
 
     </tr>
     {% endfor %}

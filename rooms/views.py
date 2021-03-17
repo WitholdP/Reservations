@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
 
 from rooms.models import Room
@@ -31,16 +32,66 @@ class AddRoom(View):
     """ Displays form for adding a new room to the database. """
 
     def get(self, request):
-        return render(request, "rooms/add_room.html")
+        message_danger = request.GET.get("message_danger", None)
+        return render(
+            request, "rooms/add_room.html", {"message_danger": message_danger}
+        )
 
     def post(self, request):
         room_name = request.POST.get("room_name")
-        capacity = request.POST.get("capacity")
+        if not room_name:  # check if roomname is not empty
+            return redirect(
+                reverse("add_room") + f"?message_danger=Room name can't be empty"
+            )
+
+        capacity = int(request.POST.get("capacity"))
+        if capacity < 1:  # checking if capacity is more than 0
+            return redirect(
+                reverse("add_room") + f"?message_danger=Capacity has to be more than 0"
+            )
+
         projector = request.POST.get("projector")
         if projector:
             projector = True
         else:
             projector = False
+
         new_room = Room(room_name=room_name, capacity=capacity, projector=projector)
-        new_room.save()
-        return redirect(f"/rooms/?message_success=Room {room_name} succesfully added")
+        try:
+            new_room.save()
+        except:
+            return redirect(
+                reverse("add_room")
+                + f"?message_danger=Room with name {room_name} already exists"
+            )
+
+        return redirect(
+            reverse("rooms") + f"?message_success=Room {room_name} has been created"
+        )
+
+
+class RoomDelete(View):
+    """Renders the template for the room deletion. It will contain the form
+    where user has to confirm the actual deletion fo the room from the database
+    - simply by typing in DELETE"""
+
+    def get(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        message_danger = request.GET.get("message_danger", None)
+        context = {
+            "room": room,
+            "message_danger": message_danger,
+        }
+        return render(request, "rooms/room_delete.html", context)
+
+    def post(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        confirmation = request.POST.get("delete")
+        if confirmation != "DELETE":
+            return redirect(
+                reverse("room_delete", args=[room.id])
+                + "?message_danger=You have to type DELETE to confirm"
+            )
+        message = f"Room {room.room_name} was succesfully deleted"
+        room.delete()
+        return redirect(reverse("rooms") + f"?message_success={message} ")

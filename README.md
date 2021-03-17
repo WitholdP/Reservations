@@ -18,7 +18,7 @@ Project is created with:
 To run this project, install it locally using pip:
 
 ```
-$ cd ../
+$ cd ../your-dir
 $ pip install Django==2.2.19
 ```
 And you're good to go!

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  
+{% if message_danger %}
+<div class="alert alert-warning" role="alert">
+  {{ message_danger }}
+</div>
+{% endif %}
+
+<h1 class="mb-5">Delete Room - {{room.room_name}}</h1>
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="row mb-3">
+    <label for="delete" class="col-sm-2 col-form-label">Type in "DELETE" to confirm:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="delete" name="delete">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-danger">Delete room</button>
+</form>
+
+{% endblock %}

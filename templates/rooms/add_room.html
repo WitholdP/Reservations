@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% if message_danger %}
+<div class="alert alert-danger" role="alert">
+  {{ message_danger }}
+</div>
+{% endif %}
+
 <h1 class="mb-5">Add Room</h1>
 
 <form method="POST">
