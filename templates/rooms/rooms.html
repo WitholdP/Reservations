@@ -38,7 +38,7 @@
       <td>{% if room.projector %}<i class="bi bi-check-circle"></i>{% endif %}</td>
       <td>Is available</td>
       <td><button type="button" class="btn btn-primary">Make reservation</button></td>
-      <td><button type="button" class="btn btn-warning">Edit</button></td>
+      <td><a href="{% url 'room_edit' room.id %}"><button type="button" class="btn btn-warning">Edit</button></a></td>
       <td><a href="{% url 'room_delete' room.id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
 
     </tr>
