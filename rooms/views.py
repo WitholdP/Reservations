@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 
-from rooms.models import Room
+from rooms.models import Room, Reservation
 
 
 class Index(View):
@@ -149,3 +149,20 @@ class RoomEdit(View):
             reverse("room_edit", args=[room_id])
             + "?message_success=Room succesfully edited"
         )
+
+
+class RoomReservation(View):
+    """View for adding a reservation for a specific room"""
+
+    def get(self, request, room_id):
+        room = Room.objects.get(pk = room_id)
+        message_success = request.GET.get("message_success", None)
+        message_danger = request.GET.get("message_danger", None)
+        reservations = Reservation.objects.filter(room = room_id)
+        context = {
+            "room": room,
+            'reservations': reservations,
+            "message_success": message_success,
+            "message_danger": message_danger,
+        }
+        return render(request, "rooms/room_reserve.html", context)

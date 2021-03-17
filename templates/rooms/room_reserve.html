@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if message_success %}
+<div class="alert alert-success" role="alert">
+  {{ message_success}}
+</div>
+{% endif %}
+
+{% if message_danger %}
+<div class="alert alert-danger" role="alert">
+  {{ message_danger }}
+</div>
+{% endif %}
+
+<h1 class="mb-5">Reserve Room - {{ room.room_name }}</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col mx-3">
+      <table class="table">
+        <thead class="table table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Comment</th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
+          <tr>
+            <th scope="row">{{ reservation.pk }}</th>
+            <td>{{ reservation.date }}</td>
+            <td>{{ reservation.comment }}</td>
+            <td><a href=""><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col mx-3">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row mb-3">
+          <label for="date" class="col-sm-2 col-form-label">Date:</label>
+          <div class="col-sm-10">
+            <div class="input-group date" id="date" data-target-input="nearest">
+              <input type="text" class="form-control datetimepicker-input" data-target="#date" name="date">
+              <div class="input-group-append" data-target="#date" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+
+            <script type="text/javascript">
+              $(function () {
+                $('#date').datetimepicker({
+                  format: 'L'
+                });
+              });
+            </script>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="comment" class="col-sm-2 col-form-label">Comment:</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Reserve</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

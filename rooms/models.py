@@ -8,3 +8,12 @@ class Room(models.Model):
 
     def __str__(self):
         return self.room_name
+
+
+class Reservation(models.Model):
+    room = models.ForeignKey(Room, on_delete = models.CASCADE)
+    date = models.DateField()
+    comment = models.TextField()
+
+    class Meta:
+        unique_together = ('room', 'date')
