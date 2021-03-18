@@ -194,3 +194,14 @@ class RoomReservation(View):
             reverse("room_reserve", args=[room_id])
             + f"?message_success=Succesfully reserved room {room} for the {reservation_date}"
         )
+
+
+def reservation_delete(request, reservation_id, room_id):
+    """Function for deleting specific reservation"""
+    reservation = Reservation.objects.get(pk=reservation_id)
+    message = f"reservation {reservation.reservation_date} was succesfully deleted"
+    reservation.delete()
+
+    return redirect(
+        reverse("room_reserve", args=[room_id]) + f"?message_success={message}"
+    )

@@ -34,7 +34,7 @@
             <th scope="row">{{ reservation.pk }}</th>
             <td>{{ reservation.reservation_date }}</td>
             <td>{{ reservation.comment }}</td>
-            <td><a href=""><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
+            <td><a href="{% url 'reservation_delete' reservation.pk room.pk %}"><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
 
           </tr>
           {% endfor %}
