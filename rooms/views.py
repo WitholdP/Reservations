@@ -22,10 +22,16 @@ class Rooms(View):
         message_success = request.GET.get("message_success", None)
         message_danger = request.GET.get("message_danger", None)
         rooms = Room.objects.all().order_by("pk")
+        current_date = datetime.now().date()
+        # search for a specific room name
+        search = request.GET.get("room_name")
+        if search:
+            rooms = rooms.filter(room_name__icontains=search)
         context = {
             "message_success": message_success,
             "message_danger": message_danger,
             "rooms": rooms,
+            "current_date": current_date,
         }
         return render(request, "rooms/rooms.html", context)
 
@@ -183,7 +189,7 @@ class RoomReservation(View):
                 + f"?message_danger=Date can't be in the past"
             )
 
-        if Reservation.objects.filter(reservation_date=reservation_date):
+        if Reservation.objects.filter(room=room, reservation_date=reservation_date):
             return redirect(
                 reverse("room_reserve", args=[room_id])
                 + f"?message_danger=There is already reservation that day"

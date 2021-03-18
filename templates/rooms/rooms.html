@@ -15,6 +15,16 @@
 {% endif %}
 
 <h1>Rooms</h1>
+<form class="my-3" method="">
+  {% csrf_token %}
+  <div class="row mb-3">
+    <label for="room_name" class="col-sm-2 col-form-label">Room name:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="room_name" name="room_name">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Search room</button>
+</form>
 
 <table class="table">
   <thead class="table table-dark">
@@ -36,7 +46,13 @@
       <td>{{ room.room_name }}</td>
       <td>{{ room.capacity }}</td>
       <td>{% if room.projector %}<i class="bi bi-check-circle"></i>{% endif %}</td>
-      <td>Is available</td>
+      <td>
+          {% for reservation in room.reservation_set.all %}
+            {% if reservation.reservation_date == current_date %}
+              <p>Unavailable</p>
+            {% endif %}
+          {% endfor %}
+      </td>
       <td><a href="{% url 'room_reserve' room.id %}"><button type="button" class="btn btn-primary">Reservations</button></a></td>
       <td><a href="{% url 'room_edit' room.id %}"><button type="button" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></button></a></td>
       <td><a href="{% url 'room_delete' room.id %}"><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
