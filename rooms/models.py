@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from django.db import models
 
 
@@ -11,9 +13,13 @@ class Room(models.Model):
 
 
 class Reservation(models.Model):
-    room = models.ForeignKey(Room, on_delete = models.CASCADE)
-    date = models.DateField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    reservation_date = models.DateField()
     comment = models.TextField()
 
+    def datecheck(self):
+        """Checks if the date put in the for is not fromt he past"""
+        return self.reservation_date < datetime.today().date()
+
     class Meta:
-        unique_together = ('room', 'date')
+        unique_together = ("room", "reservation_date")

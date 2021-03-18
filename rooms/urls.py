@@ -1,6 +1,6 @@
 from django.urls import path
 
-from rooms.views import Index, RoomAdd, RoomDelete, RoomEdit, Rooms, RoomReservation
+from rooms.views import Index, RoomAdd, RoomDelete, RoomEdit, RoomReservation, Rooms
 
 urlpatterns = [
     path("", Index.as_view(), name="index"),

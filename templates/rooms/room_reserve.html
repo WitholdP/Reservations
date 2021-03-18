@@ -29,10 +29,10 @@
           </tr>
         </thead>
         <tbody>
-          {% for reservation in reservations %}
+          {% for reservation in room.reservation_set.all %}
           <tr>
             <th scope="row">{{ reservation.pk }}</th>
-            <td>{{ reservation.date }}</td>
+            <td>{{ reservation.reservation_date }}</td>
             <td>{{ reservation.comment }}</td>
             <td><a href=""><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
 
@@ -48,7 +48,7 @@
           <label for="date" class="col-sm-2 col-form-label">Date:</label>
           <div class="col-sm-10">
             <div class="input-group date" id="date" data-target-input="nearest">
-              <input type="text" class="form-control datetimepicker-input" data-target="#date" name="date">
+              <input type="text" class="form-control datetimepicker-input" data-target="#date" name="reservation_date">
               <div class="input-group-append" data-target="#date" data-toggle="datetimepicker">
                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>

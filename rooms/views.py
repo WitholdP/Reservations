@@ -1,8 +1,10 @@
+from datetime import datetime
+
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 
-from rooms.models import Room, Reservation
+from rooms.models import Reservation, Room
 
 
 class Index(View):
@@ -155,14 +157,40 @@ class RoomReservation(View):
     """View for adding a reservation for a specific room"""
 
     def get(self, request, room_id):
-        room = Room.objects.get(pk = room_id)
         message_success = request.GET.get("message_success", None)
         message_danger = request.GET.get("message_danger", None)
-        reservations = Reservation.objects.filter(room = room_id)
+        room = Room.objects.get(pk=room_id)
         context = {
             "room": room,
-            'reservations': reservations,
             "message_success": message_success,
             "message_danger": message_danger,
         }
         return render(request, "rooms/room_reserve.html", context)
+
+    def post(self, request, room_id):
+        room = Room.objects.get(pk=room_id)
+        # time below is converted from strin to date, and later to django format YYYY-MM-DD
+        reservation_date = datetime.strptime(
+            request.POST.get("reservation_date"), "%m/%d/%Y"
+        ).date()
+        comment = request.POST.get("comment")
+        new_reservation = Reservation(
+            room=room, reservation_date=reservation_date, comment=comment
+        )
+        if new_reservation.datecheck():
+            return redirect(
+                reverse("room_reserve", args=[room_id])
+                + f"?message_danger=Date can't be in the past"
+            )
+
+        if Reservation.objects.filter(reservation_date=reservation_date):
+            return redirect(
+                reverse("room_reserve", args=[room_id])
+                + f"?message_danger=There is already reservation that day"
+            )
+
+        new_reservation.save()
+        return redirect(
+            reverse("room_reserve", args=[room_id])
+            + f"?message_success=Succesfully reserved room {room} for the {reservation_date}"
+        )
