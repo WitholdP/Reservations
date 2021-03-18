@@ -47,11 +47,11 @@
       <td>{{ room.capacity }}</td>
       <td>{% if room.projector %}<i class="bi bi-check-circle"></i>{% endif %}</td>
       <td>
-          {% for reservation in room.reservation_set.all %}
-            {% if reservation.reservation_date == current_date %}
-              <p>Unavailable</p>
-            {% endif %}
-          {% endfor %}
+        {% if room.reserved %}
+          <p>Unavailable</p>
+        {% else %}
+          <p>Available</p>
+        {% endif %}
       </td>
       <td><a href="{% url 'room_reserve' room.id %}"><button type="button" class="btn btn-primary">Reservations</button></a></td>
       <td><a href="{% url 'room_edit' room.id %}"><button type="button" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></button></a></td>

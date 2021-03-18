@@ -22,7 +22,9 @@ class Rooms(View):
         message_success = request.GET.get("message_success", None)
         message_danger = request.GET.get("message_danger", None)
         rooms = Room.objects.all().order_by("pk")
-        current_date = datetime.now().date()
+        for room in rooms:
+            reservation_dates = [res.reservation_date for res in room.reservation_set.all()]
+            room.reserved = datetime.now().date() in reservation_dates
         # search for a specific room name
         search = request.GET.get("room_name")
         if search:
@@ -31,7 +33,6 @@ class Rooms(View):
             "message_success": message_success,
             "message_danger": message_danger,
             "rooms": rooms,
-            "current_date": current_date,
         }
         return render(request, "rooms/rooms.html", context)
 
