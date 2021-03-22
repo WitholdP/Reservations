@@ -4,7 +4,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
 
-from rooms.models import Reservation, Room
+from .forms import RoomForm
+from .models import Reservation, Room
 
 
 class Index(View):
@@ -23,7 +24,9 @@ class Rooms(View):
         message_danger = request.GET.get("message_danger", None)
         rooms = Room.objects.all().order_by("pk")
         for room in rooms:
-            reservation_dates = [res.reservation_date for res in room.reservation_set.all()]
+            reservation_dates = [
+                res.reservation_date for res in room.reservation_set.all()
+            ]
             room.reserved = datetime.now().date() in reservation_dates
         # search for a specific room name
         search = request.GET.get("room_name")
@@ -42,41 +45,32 @@ class RoomAdd(View):
 
     def get(self, request):
         message_danger = request.GET.get("message_danger", None)
-        return render(
-            request, "rooms/room_add.html", {"message_danger": message_danger}
-        )
+        room_form = RoomForm()
+        context = {
+            "message_danger": message_danger,
+            "room_form": room_form,
+        }
+        return render(request, "rooms/room_add.html", context)
 
     def post(self, request):
-        room_name = request.POST.get("room_name")
-        if not room_name:  # check if roomname is not empty
+        room_form = RoomForm(request.POST)
+        if room_form.is_valid():
+            room_name = room_form.cleaned_data["room_name"]
+            capacity = int(room_form.cleaned_data["capacity"])
+            if capacity < 1:  # checking if capacity is more than 0
+                return redirect(
+                    reverse("room_add")
+                    + f"?message_danger=Capacity has to be more than 0"
+                )
+            room_form.save()
             return redirect(
-                reverse("add_room") + f"?message_danger=Room name can't be empty"
+                reverse("rooms") + f"?message_success=Room {room_name} has been created"
             )
-
-        capacity = int(request.POST.get("capacity"))
-        if capacity < 1:  # checking if capacity is more than 0
-            return redirect(
-                reverse("add_room") + f"?message_danger=Capacity has to be more than 0"
-            )
-
-        projector = request.POST.get("projector")
-        if projector:
-            projector = True
         else:
-            projector = False
-
-        new_room = Room(room_name=room_name, capacity=capacity, projector=projector)
-        try:
-            new_room.save()
-        except:
             return redirect(
-                reverse("add_room")
-                + f"?message_danger=Room with name {room_name} already exists"
+                reverse("room_add")
+                + f"?message_danger=Room with this name already exists"
             )
-
-        return redirect(
-            reverse("rooms") + f"?message_success=Room {room_name} has been created"
-        )
 
 
 class RoomDelete(View):
