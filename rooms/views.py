@@ -108,50 +108,42 @@ class RoomEdit(View):
         room = Room.objects.get(pk=room_id)
         message_success = request.GET.get("message_success", None)
         message_danger = request.GET.get("message_danger", None)
+        room_form = RoomForm(instance=room)
         context = {
             "room": room,
             "message_success": message_success,
             "message_danger": message_danger,
+            "room_form": room_form,
         }
         return render(request, "rooms/room_edit.html", context)
 
     def post(self, request, room_id):
-        room_name = request.POST.get("room_name")
-        if not room_name:
-            return redirect(
-                reverse("room_edit", args=[room_id])
-                + "?message_danger=Room name can't be empty"
-            )
+        room_form = RoomForm(request.POST)
+        if room_form.is_valid():
+            room_name = room_form.cleaned_data["room_name"]
 
-        capacity = int(request.POST.get("capacity"))
-        if capacity < 1:
-            return redirect(
-                reverse("room_edit", args=[room_id])
-                + "?message_danger=Capacity has to be more than 0"
-            )
+            capacity = int(room_form.cleaned_data["capacity"])
+            if capacity < 1:
+                return redirect(
+                    reverse("room_edit", args=[room_id])
+                    + "?message_danger=Capacity has to be more than 0"
+                )
 
-        projector = request.POST.get("projector")
-        if projector:
-            projector = True
-        else:
-            projector = False
-
-        room = Room.objects.get(pk=room_id)
-        room.room_name = room_name
-        room.capacity = capacity
-        room.projector = projector
-        try:
+            projector = room_form.cleaned_data["projector"]
+            room = Room.objects.get(pk=room_id)
+            room.room_name = room_name
+            room.capacity = capacity
+            room.projector = projector
             room.save()
-        except:
             return redirect(
                 reverse("room_edit", args=[room_id])
-                + f"?message_danger=Room with name {room_name} already exists"
+                + "?message_success=Room succesfully edited"
             )
-
-        return redirect(
-            reverse("room_edit", args=[room_id])
-            + "?message_success=Room succesfully edited"
-        )
+        else:
+            return redirect(
+                reverse("room_edit", args=[room_id])
+                + f"?message_danger=Room with that name already exists"
+            )
 
 
 class RoomReservation(View):

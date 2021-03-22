@@ -18,32 +18,7 @@
 
 <form method="POST">
   {% csrf_token %}
-  <div class="row mb-3">
-    <label for="room_name" class="col-sm-2 col-form-label">Room name:</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="room_name" name="room_name" value="{{ room.room_name }}">
-    </div>
-  </div>
-  <div class="row mb-3">
-    <label for="capacity" class="col-sm-2 col-form-label">Capacity:</label>
-    <div class="col-sm-10">
-      <input type="number" class="form-control" id="capacity" name="capacity" value="{{ room.capacity }}">
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-sm-10 offset-sm-2">
-      <div class="form-check">
-        {% if room.projector %}
-        <input class="form-check-input" type="checkbox" id="projector" name="projector" checked>
-        {% else %}
-        <input class="form-check-input" type="checkbox" id="projector" name="projector">
-        {% endif %}
-        <label class="form-check-label" for="projector">
-          Projector
-        </label>
-      </div>
-    </div>
-  </div>
+  {{ room_form.as_p }}
   <button type="submit" class="btn btn-primary">Edit room</button>
 </form>
 
