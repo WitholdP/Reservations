@@ -1,5 +1,6 @@
 from datetime import date, datetime
 
+from django.conf import settings
 from django.db import models
 
 

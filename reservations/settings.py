@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "debug_toolbar",
     "rooms",
+    "user_auth",
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,14 @@ DATABASES = {
     }
 }
 
+
+# New user model
+AUTH_USER_MODEL = "user_auth.User"
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
