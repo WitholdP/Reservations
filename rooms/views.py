@@ -12,8 +12,8 @@ class Index(View):
     """ Home page """
 
     def get(self, request):
-
-        return render(request, "rooms/index.html")
+        message_success = request.GET.get("message_success", None)
+        return render(request, "rooms/index.html", {"message_success": message_success})
 
 
 class Rooms(View):

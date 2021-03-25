@@ -36,14 +36,24 @@
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav d-flex">
                 <a class="nav-link active" aria-current="page" href="{% url 'rooms' %}">Rooms</a>
+                {% if perms.user_auth.app_admin %}
                 <a class="nav-link active" aria-current="page" href="{% url 'room_add' %}">Add room</a>
+                {% endif %}
             </div>
           </div>
         </div>
+        {% if user.is_authenticated %}
+        <div class="navbar-nav d-flex">
+          <a class="nav-link active" aria-current="page" href="">{{ user.first_name }} {{ user.last_name }}</a>
+        </div>
+        <div class="navbar-nav d-flex">
+          <a class="nav-link active" aria-current="page" href="{% url 'log_out' %}">Logout</a>
+        </div>
+        {% else %}
         <div class="navbar-nav d-flex">
           <a class="nav-link active" aria-current="page" href="{% url 'log_in' %}">Login</a>
-
         </div>
+        {% endif %}
     </nav>
 
     <div class="container mx-6 mt-3">
