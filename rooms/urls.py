@@ -7,7 +7,7 @@ from rooms.views import (
     RoomEdit,
     RoomReservation,
     Rooms,
-    reservation_delete,
+    ReservationDelete,
 )
 
 urlpatterns = [
@@ -19,7 +19,7 @@ urlpatterns = [
     path("room_reserve/<int:room_id>", RoomReservation.as_view(), name="room_reserve"),
     path(
         "reservation_delete/<int:reservation_id>/<int:room_id>/",
-        reservation_delete,
+        ReservationDelete.as_view(),
         name="reservation_delete",
     ),
 ]

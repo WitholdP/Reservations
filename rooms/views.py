@@ -189,12 +189,13 @@ class RoomReservation(View):
         )
 
 
-def reservation_delete(request, reservation_id, room_id):
-    """Function for deleting specific reservation"""
-    reservation = Reservation.objects.get(pk=reservation_id)
-    message = f"reservation {reservation.reservation_date} was succesfully deleted"
-    reservation.delete()
+class ReservationDelete(View):
+    """ View deleting specific reservation """
+    def get(self, request, reservation_id, room_id):
+        reservation = Reservation.objects.get(pk=reservation_id)
+        message = f"reservation {reservation.reservation_date} was succesfully deleted"
+        reservation.delete()
 
-    return redirect(
-        reverse("room_reserve", args=[room_id]) + f"?message_success={message}"
-    )
+        return redirect(
+            reverse("room_reserve", args=[room_id]) + f"?message_success={message}"
+        )
