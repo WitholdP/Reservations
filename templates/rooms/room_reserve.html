@@ -26,7 +26,9 @@
             <th scope="col">Date</th>
             <th scope="col">Comment</th>
             {% if user.is_authenticated %}
+            {% if perms.user_auth.app_admin %}
             <th scope="col"> </th>
+            {% endif %}
             {% endif %}
           </tr>
         </thead>
@@ -37,7 +39,9 @@
             <td>{{ reservation.reservation_date }}</td>
             <td>{{ reservation.comment }}</td>
             {% if user.is_authenticated %}
+            {% if perms.user_auth.app_admin %}
             <td><a href="{% url 'reservation_delete' reservation.pk room.pk %}"><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
+            {% endif %}
             {% endif %}
           </tr>
           {% endfor %}

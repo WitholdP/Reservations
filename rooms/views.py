@@ -41,10 +41,10 @@ class Rooms(View):
         return render(request, "rooms/rooms.html", context)
 
 
-class RoomAdd(LoginRequiredMixin, View):
+class RoomAdd(LoginRequiredMixin,PermissionRequiredMixin , View):
     """ Displays form for adding a new room to the database. """
+    permission_required = "user_auth.app_admin"
     def get(self, request):
-        # persmission_required = "user_auth.app_admin"
         message_danger = request.GET.get("message_danger", None)
         room_form = RoomForm()
         context = {
@@ -74,11 +74,11 @@ class RoomAdd(LoginRequiredMixin, View):
             )
 
 
-class RoomDelete(LoginRequiredMixin, View):
+class RoomDelete(LoginRequiredMixin,PermissionRequiredMixin , View):
     """Renders the template for the room deletion. It will contain the form
     where user has to confirm the actual deletion fo the room from the database
     - simply by typing in DELETE"""
-
+    permission_required = "user_auth.app_admin"
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         message_danger = request.GET.get("message_danger", None)
@@ -101,10 +101,10 @@ class RoomDelete(LoginRequiredMixin, View):
         return redirect(reverse("rooms") + f"?message_success={message} ")
 
 
-class RoomEdit(LoginRequiredMixin,View):
+class RoomEdit(LoginRequiredMixin,PermissionRequiredMixin ,View):
     """View for editing the specific room. It will aply same form validation as
     RoomAdd view."""
-
+    permission_required = "user_auth.app_admin"
     def get(self, request, room_id):
         room = Room.objects.get(pk=room_id)
         message_success = request.GET.get("message_success", None)
@@ -190,8 +190,9 @@ class RoomReservation(View):
         )
 
 
-class ReservationDelete(LoginRequiredMixin,View):
+class ReservationDelete(LoginRequiredMixin,PermissionRequiredMixin ,View):
     """ View deleting specific reservation """
+    permission_required = "user_auth.app_admin"
     def get(self, request, reservation_id, room_id):
         reservation = Reservation.objects.get(pk=reservation_id)
         message = f"reservation {reservation.reservation_date} was succesfully deleted"
