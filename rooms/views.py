@@ -3,6 +3,7 @@ from datetime import datetime
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 
 from .forms import RoomForm
 from .models import Reservation, Room
@@ -40,10 +41,10 @@ class Rooms(View):
         return render(request, "rooms/rooms.html", context)
 
 
-class RoomAdd(View):
+class RoomAdd(LoginRequiredMixin, View):
     """ Displays form for adding a new room to the database. """
-
     def get(self, request):
+        # persmission_required = "user_auth.app_admin"
         message_danger = request.GET.get("message_danger", None)
         room_form = RoomForm()
         context = {
@@ -73,7 +74,7 @@ class RoomAdd(View):
             )
 
 
-class RoomDelete(View):
+class RoomDelete(LoginRequiredMixin, View):
     """Renders the template for the room deletion. It will contain the form
     where user has to confirm the actual deletion fo the room from the database
     - simply by typing in DELETE"""
@@ -100,7 +101,7 @@ class RoomDelete(View):
         return redirect(reverse("rooms") + f"?message_success={message} ")
 
 
-class RoomEdit(View):
+class RoomEdit(LoginRequiredMixin,View):
     """View for editing the specific room. It will aply same form validation as
     RoomAdd view."""
 
@@ -189,7 +190,7 @@ class RoomReservation(View):
         )
 
 
-class ReservationDelete(View):
+class ReservationDelete(LoginRequiredMixin,View):
     """ View deleting specific reservation """
     def get(self, request, reservation_id, room_id):
         reservation = Reservation.objects.get(pk=reservation_id)

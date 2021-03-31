@@ -25,7 +25,9 @@
             <th scope="col">#</th>
             <th scope="col">Date</th>
             <th scope="col">Comment</th>
+            {% if user.is_authenticated %}
             <th scope="col"> </th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -34,13 +36,15 @@
             <th scope="row">{{ reservation.pk }}</th>
             <td>{{ reservation.reservation_date }}</td>
             <td>{{ reservation.comment }}</td>
+            {% if user.is_authenticated %}
             <td><a href="{% url 'reservation_delete' reservation.pk room.pk %}"><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
-
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+    {% if user.is_authenticated %}
     <div class="col mx-3">
       <form method="POST">
         {% csrf_token %}
@@ -71,6 +75,7 @@
         <button type="submit" class="btn btn-primary">Reserve</button>
       </form>
     </div>
+    {% endif %}
   </div>
 </div>
 

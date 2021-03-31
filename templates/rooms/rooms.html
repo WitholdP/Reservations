@@ -35,8 +35,10 @@
       <th scope="col">Projector</th>
       <th scope="col">Availability</th>
       <th scope="col"></th>
+      {% if user.is_authenticated %}
       <th scope="col"></th>
       <th scope="col"></th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -54,9 +56,10 @@
         {% endif %}
       </td>
       <td><a href="{% url 'room_reserve' room.id %}"><button type="button" class="btn btn-primary">Reservations</button></a></td>
+      {% if user.is_authenticated %}
       <td><a href="{% url 'room_edit' room.id %}"><button type="button" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i></button></a></td>
       <td><a href="{% url 'room_delete' room.id %}"><button type="button" class="btn btn-danger btn-sm">X</button></a></td>
-
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
